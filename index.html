@@ -195,8 +195,6 @@ function openD(id){
   const u=safeUrl(d.official_url);
   const btn=u?`<a class="btn big" href="${esc(u)}" target="_blank" rel="noopener noreferrer">公式公募ページ（1次情報）を開く</a>`:'<p class="none">公式URL：詳細は公式ページをご確認ください</p>';
   const k=status(d.application_period);
-  const steps=(d.steps&&d.steps.length)?d.steps.map((s,i)=>`<div class="step"><b>${i+1}</b><div>${esc(s)}</div></div>`).join(""):`<p class="none">${NA}（詳細は公式ページをご確認ください）</p>`;
-  const docs=(d.documents&&d.documents.length)?d.documents.map(x=>{const du=safeUrl(x.url);return du?`<div><a href="${esc(du)}" target="_blank" rel="noopener noreferrer">${esc(x.name||du)}</a></div>`:""}).join(""):`<p class="none">${NA}（詳細は公式ページをご確認ください）</p>`;
   $("md").innerHTML=`<button class="btn o x" onclick="closeD()">閉じる</button>
 <span class="st ${k}">${stLabel(k)}</span>
 <h2>${esc(d.title||NA)}</h2>
@@ -210,8 +208,6 @@ ${d.purpose?`<p><b>目的：</b>${esc(d.purpose)}</p>`:""}
 <div>${(d.target_roles||[]).map(r=>`<span class="tag">${esc(r)}</span>`).join("")}</div>
 <div class="meta">募集期間：${esc(fmtPeriod(d.application_period))}</div>
 ${d.how?`<h4>応募方法</h4><p>${esc(d.how)}</p>`:""}
-<h4>やるべきこと・手順</h4>${steps}
-<h4>必要書類・様式</h4>${docs}
 <h4>公式ページ</h4>${btn}
 <div class="meta">最終更新：${esc(d.last_updated||NA)}</div>`;
   $("ov").classList.add("on");$("ov").scrollTop=0;
