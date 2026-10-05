@@ -43,6 +43,9 @@ input[type=text],select,textarea{width:100%;padding:8px;border:1px solid var(--b
 .step{display:flex;gap:8px;margin-bottom:6px}
 .step b{background:var(--ac);color:#fff;border-radius:50%;min-width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:12px}
 .none{color:var(--sub);font-size:13px}
+.info{font-size:13px;line-height:1.6}
+.info b{color:var(--ac);margin-right:6px}
+.left{margin-left:8px;font-size:12px;font-weight:700;color:var(--warnTx);background:var(--warn);border-radius:4px;padding:1px 7px}
 details{margin-top:12px}summary{cursor:pointer;font-size:13px;color:var(--ac)}
 textarea{height:140px;font-family:ui-monospace,monospace;font-size:12px}
 .x{float:right}
@@ -51,7 +54,7 @@ textarea{height:140px;font-family:ui-monospace,monospace;font-size:12px}
 <body>
 <header>
 <h1>農業向け 補助金・助成金ポータル</h1>
-<p>立場と地域から探して、公式の1次情報ページへ</p>
+<p>受付中の公募を中心に、対象・期間・応募方法をひと目で。詳しくは公式ページ（1次情報）へ</p>
 </header>
 <main>
 <div class="notice" id="notice"></div>
@@ -106,18 +109,34 @@ function isJunk(d){
   return false;
 }
 
-let DATA=SAMPLE.slice(),custom=false,UPDATED="";
-async function loadData(){try{const r=await fetch("data.json",{cache:"no-store"});const j=await r.json();if(j&&Array.isArray(j.items)){DATA=j.items;UPDATED=j.updated||"";}}catch(e){}DATA=DATA.filter(d=>!isJunk(d));}
+let DATA=SAMPLE.slice(),custom=false,UPDATED="",loadFailed=false;
+async function loadData(){try{const r=await fetch("data.json",{cache:"no-store"});if(!r.ok)throw new Error("http");const j=await r.json();if(j&&Array.isArray(j.items)){DATA=j.items;UPDATED=j.updated||"";}else{loadFailed=true;}}catch(e){loadFailed=true;}DATA=DATA.filter(d=>!isJunk(d));}
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const safeUrl=u=>/^https?:\/\//i.test(u||"")?u:null;
 const NA="情報なし";
 
+function parsePeriod(p){
+  const m=String(p||"").match(/(\d{4})-(\d{1,2})-(\d{1,2})\s*[～〜~\-]\s*(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if(!m)return null;
+  const z=n=>String(n).padStart(2,"0");
+  return [m[1]+"-"+z(m[2])+"-"+z(m[3]),m[4]+"-"+z(m[5])+"-"+z(m[6])];
+}
+function today(){const n=new Date();return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0")}
 function status(p){
-  const m=String(p||"").match(/(\d{4}-\d{2}-\d{2})\s*[～~\-]\s*(\d{4}-\d{2}-\d{2})/);
-  if(!m)return "unk";
-  const t=new Date().toISOString().slice(0,10);
-  return t<m[1]?"soon":(t>m[2]?"end":"open");
+  const r=parsePeriod(p);
+  if(!r)return "unk";
+  const t=today();
+  return t<r[0]?"soon":(t>r[1]?"end":"open");
+}
+function daysLeft(p){
+  const r=parsePeriod(p);if(!r)return null;
+  return Math.round((new Date(r[1]+"T00:00:00")-new Date(today()+"T00:00:00"))/86400000);
+}
+function fmtPeriod(p){
+  const r=parsePeriod(p);if(!r)return p||NA;
+  const a=r[0].split("-").map(Number),b=r[1].split("-").map(Number);
+  return a[0]===b[0]?`${a[0]}年${a[1]}月${a[2]}日〜${b[1]}月${b[2]}日`:`${a[0]}年${a[1]}月${a[2]}日〜${b[0]}年${b[1]}月${b[2]}日`;
 }
 const stLabel=k=>STS.find(s=>s[0]===k)[1];
 
@@ -125,7 +144,7 @@ function init(){
   $("pref").innerHTML='<option value="">すべて</option>'+PREFS.map(p=>`<option>${p}</option>`).join("");
   $("cat").innerHTML='<option value="">すべて</option>'+CATS.map(c=>`<option>${c}</option>`).join("");
   $("roles").innerHTML=ROLES.map(r=>`<label><input type="checkbox" value="${esc(r)}" class="rc"><span>${esc(r)}</span></label>`).join("");
-  $("stats").innerHTML=STS.map(s=>`<label><input type="checkbox" value="${s[0]}" class="sc"><span>${s[1]}</span></label>`).join("");
+  $("stats").innerHTML=STS.map(s=>`<label><input type="checkbox" value="${s[0]}" class="sc"${s[0]!=="end"?" checked":""}><span>${s[1]}</span></label>`).join("");
   ["pref","cat","kw"].forEach(i=>$(i).addEventListener("input",render));
   document.querySelectorAll(".rc,.sc").forEach(e=>e.addEventListener("change",render));
   render();
@@ -144,19 +163,27 @@ function render(){
     if(kw&&![d.title,d.organization,d.summary,d.category].join(" ").toLowerCase().includes(kw))return false;
     return true;
   });
+  const rank={open:0,soon:1,unk:2,end:3};
+  hit.sort((a,b)=>{const ka=status(a.application_period),kb=status(b.application_period);if(ka!==kb)return rank[ka]-rank[kb];const ra=parsePeriod(a.application_period),rb=parsePeriod(b.application_period);if(ra&&rb&&ra[1]!==rb[1])return ka==="end"?(ra[1]<rb[1]?1:-1):(ra[1]<rb[1]?-1:1);return 0});
   $("count").textContent=hit.length+" 件";
   $("list").innerHTML=hit.length?hit.map(card).join(""):'<p class="none">条件に合う情報がありません。条件を緩めてみてください。</p>';
-  $("notice").innerHTML=custom?"読み込んだデータを表示しています。内容は必ず公式ページでご確認ください。":"農林水産省・環境省の公式ページの記載をもとにした情報です。募集期間や受付状況は変わることがあるため、申請の前に、必ず公式ページで最新の状況をご確認ください。"+(DATA.some(d=>d.pending)?"「自動収集・人の確認前」の札が付いた項目（"+DATA.filter(d=>d.pending).length+"件）は、人が公式ページと照合する前のものです。":"")+(UPDATED?"（データ更新日："+esc(UPDATED)+"）":"")+" 立場が「情報なし」の事業は、立場で絞っても表示されます。";
+  $("notice").innerHTML=(loadFailed?"<b>⚠ 最新のデータを読み込めなかったため、保存されている古い情報（2026-10-04時点）を表示しています。時間をおいて、ページを再読み込みしてください。</b><br>":"")+(custom?"読み込んだデータを表示しています。内容は必ず公式ページでご確認ください。":"農林水産省・環境省の公式ページに載っている公募を、対象・募集期間・応募方法がひと目で分かるようにまとめています。募集期間や受付状況は変わることがあるため、申請の前に、必ず公式ページで最新の状況をご確認ください。"+(DATA.some(d=>d.pending)?"「自動収集・人の確認前」の札が付いた項目（"+DATA.filter(d=>d.pending).length+"件）は、人が公式ページと照合する前のものです。":"")+(UPDATED?"（データ更新日："+esc(UPDATED)+"）":"")+" 初期表示では、終了した公募は隠れています。見るには「募集状況」の「終了」にチェックを入れてください。立場が「情報なし」の事業は、立場で絞っても表示されます。");
 }
 
 function card(d){
-  const k=status(d.application_period),u=safeUrl(d.official_url);
+  const k=status(d.application_period),u=safeUrl(d.official_url),n=daysLeft(d.application_period);
+  const left=(k==="open"&&n!==null)?`<span class="left">${n===0?"本日が締切":"締切まで あと"+n+"日"}</span>`:"";
+  const roles=(d.target_roles||[]).map(r=>`<span class="tag">${esc(r)}</span>`).join("");
+  const who=d.who?`<div class="info"><b>対象</b>${esc(d.who)}</div>`:(roles?"":'<div class="none">対象：'+NA+'</div>');
   return `<div class="card">
-<div><span class="st ${k}">${stLabel(k)}</span></div>
+<div><span class="st ${k}">${stLabel(k)}</span>${left}</div>
 <h3>${esc(d.title||NA)}</h3>
 <div class="meta">主管：${esc(d.organization||NA)}／地域：${esc(d.prefecture||NA)}</div>
-<div>${d.pending?'<span class="tag" style="background:var(--warn);color:var(--warnTx)">自動収集・人の確認前</span>':""}${(d.target_roles||[]).map(r=>`<span class="tag">${esc(r)}</span>`).join("")||'<span class="none">対象：'+NA+'</span>'}</div>
-<div class="meta">募集期間：${esc(d.application_period||NA)}</div>
+<div>${d.pending?'<span class="tag" style="background:var(--warn);color:var(--warnTx)">自動収集・人の確認前</span>':""}${roles}</div>
+${who}
+<div class="info"><b>募集期間</b>${esc(fmtPeriod(d.application_period))}</div>
+${d.purpose?`<div class="info"><b>目的</b>${esc(d.purpose)}</div>`:""}
+${d.how?`<div class="info"><b>応募方法</b>${esc(d.how)}</div>`:""}
 <div class="btns">
 <button class="btn o" onclick="openD('${esc(d.id)}')">申請ガイド</button>
 ${u?`<a class="btn" href="${esc(u)}" target="_blank" rel="noopener noreferrer">公式ページ（1次情報）</a>`:'<span class="none">1次情報URL：'+NA+'</span>'}
@@ -177,9 +204,12 @@ function openD(id){
 ${d.dummy?'<div class="notice" style="margin-top:8px">これは表示確認用のダミーです。実在の補助金ではありません。</div>':""}
 ${btn}
 <h4>概要と対象要件</h4>
+${d.who?`<p><b>対象：</b>${esc(d.who)}</p>`:""}
+${d.purpose?`<p><b>目的：</b>${esc(d.purpose)}</p>`:""}
 <p>${d.summary?esc(d.summary):NA+"（詳細は公式ページをご確認ください）"}</p>
 <div>${(d.target_roles||[]).map(r=>`<span class="tag">${esc(r)}</span>`).join("")}</div>
-<div class="meta">募集期間：${esc(d.application_period||NA)}</div>
+<div class="meta">募集期間：${esc(fmtPeriod(d.application_period))}</div>
+${d.how?`<h4>応募方法</h4><p>${esc(d.how)}</p>`:""}
 <h4>やるべきこと・手順</h4>${steps}
 <h4>必要書類・様式</h4>${docs}
 <h4>公式ページ</h4>${btn}
