@@ -65,7 +65,6 @@ textarea{height:140px;font-family:ui-monospace,monospace;font-size:12px}
 <div class="f"><label class="t" for="cat">目的・カテゴリー</label><select id="cat"></select></div>
 <div class="f"><label class="t" for="kw">キーワード</label><input type="text" id="kw" placeholder="例：スマート農業"></div>
 </div>
-<div style="margin-top:10px"><label class="t">立場（複数選択可）</label><div class="chips" id="roles"></div></div>
 <div style="margin-top:10px"><label class="t">募集状況</label><div class="chips" id="stats"></div></div>
 </div>
 
@@ -94,7 +93,6 @@ const SAMPLE=[
 {id:"maff_2026_keiei1",title:"令和8年度（第1回）経営局関係補助金等",organization:"農林水産省",target_roles:[],prefecture:"全国",category:"新規就農・人財育成・教育",application_period:"2026-02-09 ～ 2026-03-03",official_url:"https://www.maff.go.jp/j/supply/hozyo/keiei/260209_101-2.html",summary:"経営局関係の7事業の事業実施主体を公募。公示で確認できた事業には、優良経営体表彰等事業、新規就農者育成総合対策のうち農業教育高度化事業（全国事業）などがある。",steps:null,documents:null,last_updated:"2026-10-04（確認日）"}
 ];
 const PREFS=["全国","北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"];
-const ROLES=["農家（個人）","法人農家（農業法人）","卸・販売店・商社","団体組織（JA・農協・協議会等）","農業資材・機器メーカー"];
 const CATS=["その他","資材高騰・コスト削減対策","省力化・スマート農業機器導入","施設園芸・後付け環境制御","環境保全・脱炭素・有機質資材","新規就農・人財育成・教育"];
 const STS=[["open","受付中"],["soon","予告"],["end","終了"],["unk","期間不明"]];
 
@@ -143,22 +141,19 @@ const stLabel=k=>STS.find(s=>s[0]===k)[1];
 function init(){
   $("pref").innerHTML='<option value="">すべて</option>'+PREFS.map(p=>`<option>${p}</option>`).join("");
   $("cat").innerHTML='<option value="">すべて</option>'+CATS.map(c=>`<option>${c}</option>`).join("");
-  $("roles").innerHTML=ROLES.map(r=>`<label><input type="checkbox" value="${esc(r)}" class="rc"><span>${esc(r)}</span></label>`).join("");
   $("stats").innerHTML=STS.map(s=>`<label><input type="checkbox" value="${s[0]}" class="sc"${s[0]!=="end"?" checked":""}><span>${s[1]}</span></label>`).join("");
   ["pref","cat","kw"].forEach(i=>$(i).addEventListener("input",render));
-  document.querySelectorAll(".rc,.sc").forEach(e=>e.addEventListener("change",render));
+  document.querySelectorAll(".sc").forEach(e=>e.addEventListener("change",render));
   render();
 }
 
 function render(){
   const pref=$("pref").value,cat=$("cat").value,kw=$("kw").value.trim().toLowerCase();
-  const rs=[...document.querySelectorAll(".rc:checked")].map(e=>e.value);
   const ss=[...document.querySelectorAll(".sc:checked")].map(e=>e.value);
   const hit=DATA.filter(d=>{
     // 地域：全国の事業は、どの都道府県で絞っても残す
     if(pref&&d.prefecture!==pref&&d.prefecture!=="全国")return false;
     if(cat&&d.category!==cat&&!(CATS.includes(cat)&&String(d.category||"").includes(cat.slice(0,4))&&false))return false;
-    if(rs.length&&(d.target_roles||[]).length&&!d.target_roles.some(r=>rs.includes(r)))return false;
     if(ss.length&&!ss.includes(status(d.application_period)))return false;
     if(kw&&![d.title,d.organization,d.summary,d.category].join(" ").toLowerCase().includes(kw))return false;
     return true;
@@ -167,7 +162,7 @@ function render(){
   hit.sort((a,b)=>{const ka=status(a.application_period),kb=status(b.application_period);if(ka!==kb)return rank[ka]-rank[kb];const ra=parsePeriod(a.application_period),rb=parsePeriod(b.application_period);if(ra&&rb&&ra[1]!==rb[1])return ka==="end"?(ra[1]<rb[1]?1:-1):(ra[1]<rb[1]?-1:1);return 0});
   $("count").textContent=hit.length+" 件";
   $("list").innerHTML=hit.length?hit.map(card).join(""):'<p class="none">条件に合う情報がありません。条件を緩めてみてください。</p>';
-  $("notice").innerHTML=(loadFailed?"<b>⚠ 最新のデータを読み込めなかったため、保存されている古い情報（2026-10-04時点）を表示しています。時間をおいて、ページを再読み込みしてください。</b><br>":"")+(custom?"読み込んだデータを表示しています。内容は必ず公式ページでご確認ください。":"農林水産省・環境省の公式ページに載っている公募を、対象・募集期間・応募方法がひと目で分かるようにまとめています。募集期間や受付状況は変わることがあるため、申請の前に、必ず公式ページで最新の状況をご確認ください。"+(DATA.some(d=>d.pending)?"「自動収集・人の確認前」の札が付いた項目（"+DATA.filter(d=>d.pending).length+"件）は、人が公式ページと照合する前のものです。":"")+(UPDATED?"（データ更新日："+esc(UPDATED)+"）":"")+" 初期表示では、終了した公募は隠れています。見るには「募集状況」の「終了」にチェックを入れてください。立場が「情報なし」の事業は、立場で絞っても表示されます。");
+  $("notice").innerHTML=(loadFailed?"<b>⚠ 最新のデータを読み込めなかったため、保存されている古い情報（2026-10-04時点）を表示しています。時間をおいて、ページを再読み込みしてください。</b><br>":"")+(custom?"読み込んだデータを表示しています。内容は必ず公式ページでご確認ください。":"農林水産省・環境省の公式ページに載っている公募を、対象・募集期間・応募方法がひと目で分かるようにまとめています。募集期間や受付状況は変わることがあるため、申請の前に、必ず公式ページで最新の状況をご確認ください。"+(DATA.some(d=>d.pending)?"「自動収集・人の確認前」の札が付いた項目（"+DATA.filter(d=>d.pending).length+"件）は、人が公式ページと照合する前のものです。":"")+(UPDATED?"（データ更新日："+esc(UPDATED)+"）":"")+" 初期表示では、終了した公募は隠れています。見るには「募集状況」の「終了」にチェックを入れてください。");
 }
 
 function card(d){
