@@ -1,0 +1,153 @@
+{
+ "updated": "2026-10-04",
+ "items": [
+  {
+   "id": "env_2026_denka",
+   "title": "令和8年度 農業機械の電動化促進事業",
+   "organization": "環境省（農林水産省同時発表）",
+   "target_roles": [],
+   "prefecture": "全国",
+   "category": "環境保全・脱炭素・有機質資材",
+   "application_period": "2026-07-07開始（終了日の情報なし）",
+   "official_url": "https://www.env.go.jp/press/press_05228.html",
+   "summary": "運輸部門等の脱炭素化に向けた先進的システム社会実装促進事業のうち、農業機械の電動化促進事業。執行団体の公益社団法人農林水産・食品産業技術振興協会が、補助金の交付申請の公募を2026年7月7日から開始。",
+   "steps": null,
+   "documents": null,
+   "last_updated": "2026-10-04（確認日）"
+  },
+  {
+   "id": "maff_2026_sangyou",
+   "title": "令和8年度 業種横断型技術開発実証事業（2次公募）",
+   "organization": "農林水産省",
+   "target_roles": [
+    "農業資材・機器メーカー"
+   ],
+   "prefecture": "全国",
+   "category": "省力化・スマート農業機器導入",
+   "application_period": "2026-06-01 ～ 2026-07-03",
+   "official_url": "https://www.maff.go.jp/j/supply/hozyo/kanbo/260601_031-1.html",
+   "summary": "省力化等生産性向上に資する新たな技術の開発に向けて、食品事業者、機械メーカー等が連携して行うプロジェクトを支援する事業。公募期間は令和8年6月1日から7月3日17時（必着）。",
+   "steps": null,
+   "documents": null,
+   "last_updated": "2026-10-04（確認日）"
+  },
+  {
+   "id": "maff_2026_smart_engei",
+   "title": "令和8年度 持続的生産強化対策事業のうち 時代を拓く園芸産地づくり支援のうち スマート施設園芸展開推進事業",
+   "organization": "農林水産省",
+   "target_roles": [],
+   "prefecture": "全国",
+   "category": "施設園芸・後付け環境制御",
+   "application_period": "2026-03-27 ～ 2026-04-07",
+   "official_url": "https://www.maff.go.jp/j/supply/hozyo/nousan/260327_172-1.html",
+   "summary": "事業実施主体の公募。令和8年度政府予算原案に基づく公募で、成立後の予算内容により事業内容・予算額が変わる可能性があると公示されている。申請書類の提出期限は4月7日17:00必着。",
+   "steps": null,
+   "documents": null,
+   "last_updated": "2026-10-04（確認日）"
+  },
+  {
+   "id": "maff_2026_smart_support",
+   "title": "スマート農業・農業支援サービス事業導入総合サポート事業のうち スマート農業・農業支援サービス事業加速化総合対策事業（令和8年度当初予算）",
+   "organization": "農林水産省",
+   "target_roles": [],
+   "prefecture": "全国",
+   "category": "省力化・スマート農業機器導入",
+   "application_period": "2026-05-29 ～ 2026-07-14",
+   "official_url": "https://www.maff.go.jp/j/supply/hozyo/nousan/260529_140-2.html",
+   "summary": "メニューは「スマート農業技術と産地の橋渡し支援」と「農業支援サービスの立上げ・事業拡大支援」。メニューごとの公募要領を確認し、応募様式に記入して公募期間中に提出する。公募開始は令和8年5月29日、受付期限は7月14日17:00。",
+   "steps": [
+    "メニューごとの公募要領・申請書類の様式を公式ページで確認する",
+    "農業支援サービスの立上げ・事業拡大支援の場合は、事前に書類等確認機関（一般社団法人農林水産航空・農業支援サービス協会）の確認を受ける",
+    "応募様式に必要事項を記入し、公募期間中に申請書類を提出する"
+   ],
+   "documents": null,
+   "last_updated": "2026-10-04（確認日）"
+  },
+  {
+   "id": "maff_2026_tsuyoi",
+   "title": "令和8年度 強い農業づくり総合支援交付金（食料システム構築支援タイプ（全国の取組））2回目公募",
+   "organization": "農林水産省",
+   "target_roles": [],
+   "prefecture": "全国",
+   "category": "その他",
+   "application_period": null,
+   "official_url": "https://www.maff.go.jp/j/supply/hozyo/nousan/260414_111-1.html",
+   "summary": "「全国の取組」（原則、供給調整機能を有する施設、補助事業で整備する施設、受益する生産者が都道府県をまたぐ取組）が対象。公募期間は今回の確認では分からなかった。",
+   "steps": null,
+   "documents": null,
+   "last_updated": "2026-10-04（確認日）"
+  },
+  {
+   "id": "maff_2026_nosanson",
+   "title": "令和8年度 農山漁村振興交付金（地域資源活用価値創出対策）地域活性化型、農泊推進型、農福連携型 追加（第2次）公募",
+   "organization": "農林水産省",
+   "target_roles": [],
+   "prefecture": "全国",
+   "category": "その他",
+   "application_period": null,
+   "official_url": "https://www.maff.go.jp/j/supply/hozyo/nousin/260615_301-1.html",
+   "summary": "全国単位の取組提案者向け事業を除く、地域活性化型・農泊推進型・農福連携型の交付金交付候補者の追加公募。公募期間は今回の確認では分からなかった。",
+   "steps": null,
+   "documents": null,
+   "last_updated": "2026-10-04（確認日）"
+  },
+  {
+   "id": "maff_2026_koyou",
+   "title": "「雇用就農資金」令和8年度第2回募集",
+   "organization": "農林水産省（実施主体：一般社団法人全国農業会議所）",
+   "target_roles": [
+    "法人農家（農業法人）"
+   ],
+   "prefecture": "全国",
+   "category": "新規就農・人財育成・教育",
+   "application_period": "2026-06-18 ～ 2026-07-22",
+   "official_url": "https://www.maff.go.jp/j/press/keiei/zinzai/260618.html",
+   "summary": "50歳未満の就農希望者を新たに雇用する農業法人等への資金。雇用就農者育成・独立支援タイプは年間最大60万円、最長4年間（公式ページの記載）。令和7年10月1日〜令和8年6月1日に雇用した場合が対象。",
+   "steps": null,
+   "documents": null,
+   "last_updated": "2026-10-04（確認日）"
+  },
+  {
+   "id": "maff_2026_hiryo4",
+   "title": "国内肥料資源活用総合支援事業（令和7年度補正予算）第4次募集",
+   "organization": "農林水産省",
+   "target_roles": [],
+   "prefecture": "全国",
+   "category": "環境保全・脱炭素・有機質資材",
+   "application_period": "2026-06-23 ～ 2026-07-13",
+   "official_url": "https://www.maff.go.jp/j/seisan/sien/sizai/s_hiryo/kokunaishigen/r7_recruit.html",
+   "summary": "令和8年度内に事業完了する事業実施計画書が対象の事業実施主体の募集。肥料の試作、栽培実証、機械導入等の推進支援と、施設整備の支援がある。",
+   "steps": null,
+   "documents": null,
+   "last_updated": "2026-10-04（確認日）"
+  },
+  {
+   "id": "maff_2026_kaju",
+   "title": "令和8年度 果樹農業生産力増強総合対策（果樹労働生産性向上等対策事業、果樹優良苗木・花粉安定確保対策事業）",
+   "organization": "農林水産省",
+   "target_roles": [],
+   "prefecture": "全国",
+   "category": "省力化・スマート農業機器導入",
+   "application_period": "2026-02-13 ～ 2026-03-04",
+   "official_url": "https://www.maff.go.jp/j/supply/hozyo/nousan/260213_180-1.html",
+   "summary": "果樹労働生産性向上等対策事業および果樹優良苗木・花粉安定確保対策事業の事業実施主体の公募。申請書類は原則、電子メールまたは郵送等で提出。",
+   "steps": null,
+   "documents": null,
+   "last_updated": "2026-10-04（確認日）"
+  },
+  {
+   "id": "maff_2026_keiei1",
+   "title": "令和8年度（第1回）経営局関係補助金等",
+   "organization": "農林水産省",
+   "target_roles": [],
+   "prefecture": "全国",
+   "category": "新規就農・人財育成・教育",
+   "application_period": "2026-02-09 ～ 2026-03-03",
+   "official_url": "https://www.maff.go.jp/j/supply/hozyo/keiei/260209_101-2.html",
+   "summary": "経営局関係の7事業の事業実施主体を公募。公示で確認できた事業には、優良経営体表彰等事業、新規就農者育成総合対策のうち農業教育高度化事業（全国事業）などがある。",
+   "steps": null,
+   "documents": null,
+   "last_updated": "2026-10-04（確認日）"
+  }
+ ]
+}

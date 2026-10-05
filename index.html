@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>農業向け 補助金・助成金ポータル</title>
+<style>
+:root{--bg:#f6f7f4;--card:#fff;--tx:#1d2a1f;--sub:#5d6b5f;--bd:#d9dfd5;--ac:#2f7d3a;--ac2:#e6f2e7;--warn:#fff4d6;--warnTx:#7a5a00;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141a15;--card:#1d261e;--tx:#e8efe8;--sub:#a3b1a4;--bd:#33402f;--ac:#6cc27a;--ac2:#243a27;--warn:#3a3118;--warnTx:#f0d98a}}
+:root[data-theme="dark"]{--bg:#141a15;--card:#1d261e;--tx:#e8efe8;--sub:#a3b1a4;--bd:#33402f;--ac:#6cc27a;--ac2:#243a27;--warn:#3a3118;--warnTx:#f0d98a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:"Hiragino Sans","Noto Sans JP",system-ui,sans-serif;line-height:1.6}
+header{background:var(--ac);color:#fff;padding:16px}
+header h1{margin:0;font-size:18px}
+header p{margin:4px 0 0;font-size:12px;opacity:.9}
+main{max-width:960px;margin:0 auto;padding:12px}
+.notice{background:var(--warn);color:var(--warnTx);border-radius:8px;padding:10px 12px;font-size:13px;margin-bottom:12px}
+.panel{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:12px;margin-bottom:12px}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.f{flex:1 1 180px;min-width:0}
+label.t{display:block;font-size:12px;color:var(--sub);margin-bottom:3px}
+input[type=text],select,textarea{width:100%;padding:8px;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--tx);font-size:14px;font-family:inherit}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips label{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--bd);border-radius:16px;padding:4px 10px;font-size:13px;cursor:pointer}
+.chips input:checked+span{font-weight:700;color:var(--ac)}
+.count{font-size:13px;color:var(--sub);margin:4px 2px 8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.card h3{margin:0;font-size:15px}
+.meta{font-size:12px;color:var(--sub)}
+.tag{display:inline-block;background:var(--ac2);color:var(--ac);border-radius:4px;padding:1px 7px;font-size:12px;margin:0 4px 4px 0}
+.st{display:inline-block;border-radius:4px;padding:1px 7px;font-size:12px;font-weight:700}
+.st.open{background:#2f7d3a;color:#fff}.st.soon{background:#c98a00;color:#fff}.st.end{background:#8a8f8a;color:#fff}.st.unk{background:var(--bd);color:var(--tx)}
+.btn{display:inline-block;border:1px solid var(--ac);background:var(--ac);color:#fff;border-radius:6px;padding:8px 12px;font-size:14px;text-decoration:none;cursor:pointer;font-family:inherit}
+.btn.o{background:transparent;color:var(--ac)}
+.btns{display:flex;gap:8px;margin-top:auto;flex-wrap:wrap}
+.btn.big{display:block;text-align:center;padding:12px;font-size:15px;font-weight:700;margin:10px 0}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;z-index:10;overflow-y:auto;padding:max(12px,env(safe-area-inset-top,0px)) 12px max(12px,env(safe-area-inset-bottom,0px))}
+#ov.on{display:block}
+#md{background:var(--card);max-width:720px;margin:0 auto;border-radius:12px;padding:16px}
+#md h2{margin:0 0 6px;font-size:18px}
+#md h4{margin:16px 0 6px;font-size:14px;border-left:4px solid var(--ac);padding-left:8px}
+.step{display:flex;gap:8px;margin-bottom:6px}
+.step b{background:var(--ac);color:#fff;border-radius:50%;min-width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:12px}
+.none{color:var(--sub);font-size:13px}
+details{margin-top:12px}summary{cursor:pointer;font-size:13px;color:var(--ac)}
+textarea{height:140px;font-family:ui-monospace,monospace;font-size:12px}
+.x{float:right}
+</style>
+</head>
+<body>
+<header>
+<h1>農業向け 補助金・助成金ポータル</h1>
+<p>立場と地域から探して、公式の1次情報ページへ</p>
+</header>
+<main>
+<div class="notice" id="notice"></div>
+
+<div class="panel">
+<div class="row">
+<div class="f"><label class="t" for="pref">対象地域</label><select id="pref"></select></div>
+<div class="f"><label class="t" for="cat">目的・カテゴリー</label><select id="cat"></select></div>
+<div class="f"><label class="t" for="kw">キーワード</label><input type="text" id="kw" placeholder="例：スマート農業"></div>
+</div>
+<div style="margin-top:10px"><label class="t">立場（複数選択可）</label><div class="chips" id="roles"></div></div>
+<div style="margin-top:10px"><label class="t">募集状況</label><div class="chips" id="stats"></div></div>
+</div>
+
+<div class="count" id="count"></div>
+<div class="grid" id="list"></div>
+
+<p class="none" style="margin-top:16px">最新の受付状況は、農林水産省「補助事業参加者の公募」の一覧で確認できます。<a href="https://www.maff.go.jp/j/supply/hozyo/index.html" target="_blank" rel="noopener noreferrer">公式一覧ページを開く</a></p>
+</main>
+
+<div id="ov"><div id="md"></div></div>
+
+<script>
+// ---- 初期データ ----
+// 2026-10-04 時点で、公式サイトの公募ページの記載から転記・要約したものです。
+// 記載のない項目は null にしてあり、画面では「情報なし」と出ます。分類（カテゴリー）は当サイトの便宜上の区分です。
+const SAMPLE=[
+{id:"env_2026_denka",title:"令和8年度 農業機械の電動化促進事業",organization:"環境省（農林水産省同時発表）",target_roles:[],prefecture:"全国",category:"環境保全・脱炭素・有機質資材",application_period:"2026-07-07開始（終了日の情報なし）",official_url:"https://www.env.go.jp/press/press_05228.html",summary:"運輸部門等の脱炭素化に向けた先進的システム社会実装促進事業のうち、農業機械の電動化促進事業。執行団体の公益社団法人農林水産・食品産業技術振興協会が、補助金の交付申請の公募を2026年7月7日から開始。",steps:null,documents:null,last_updated:"2026-10-04（確認日）"},
+{id:"maff_2026_sangyou",title:"令和8年度 業種横断型技術開発実証事業（2次公募）",organization:"農林水産省",target_roles:["農業資材・機器メーカー"],prefecture:"全国",category:"省力化・スマート農業機器導入",application_period:"2026-06-01 ～ 2026-07-03",official_url:"https://www.maff.go.jp/j/supply/hozyo/kanbo/260601_031-1.html",summary:"省力化等生産性向上に資する新たな技術の開発に向けて、食品事業者、機械メーカー等が連携して行うプロジェクトを支援する事業。公募期間は令和8年6月1日から7月3日17時（必着）。",steps:null,documents:null,last_updated:"2026-10-04（確認日）"},
+{id:"maff_2026_smart_engei",title:"令和8年度 持続的生産強化対策事業のうち 時代を拓く園芸産地づくり支援のうち スマート施設園芸展開推進事業",organization:"農林水産省",target_roles:[],prefecture:"全国",category:"施設園芸・後付け環境制御",application_period:"2026-03-27 ～ 2026-04-07",official_url:"https://www.maff.go.jp/j/supply/hozyo/nousan/260327_172-1.html",summary:"事業実施主体の公募。令和8年度政府予算原案に基づく公募で、成立後の予算内容により事業内容・予算額が変わる可能性があると公示されている。申請書類の提出期限は4月7日17:00必着。",steps:null,documents:null,last_updated:"2026-10-04（確認日）"},
+{id:"maff_2026_smart_support",title:"スマート農業・農業支援サービス事業導入総合サポート事業のうち スマート農業・農業支援サービス事業加速化総合対策事業（令和8年度当初予算）",organization:"農林水産省",target_roles:[],prefecture:"全国",category:"省力化・スマート農業機器導入",application_period:"2026-05-29 ～ 2026-07-14",official_url:"https://www.maff.go.jp/j/supply/hozyo/nousan/260529_140-2.html",summary:"メニューは「スマート農業技術と産地の橋渡し支援」と「農業支援サービスの立上げ・事業拡大支援」。メニューごとの公募要領を確認し、応募様式に記入して公募期間中に提出する。公募開始は令和8年5月29日、受付期限は7月14日17:00。",steps:["メニューごとの公募要領・申請書類の様式を公式ページで確認する","農業支援サービスの立上げ・事業拡大支援の場合は、事前に書類等確認機関（一般社団法人農林水産航空・農業支援サービス協会）の確認を受ける","応募様式に必要事項を記入し、公募期間中に申請書類を提出する"],documents:null,last_updated:"2026-10-04（確認日）"},
+{id:"maff_2026_tsuyoi",title:"令和8年度 強い農業づくり総合支援交付金（食料システム構築支援タイプ（全国の取組））2回目公募",organization:"農林水産省",target_roles:[],prefecture:"全国",category:"その他",application_period:null,official_url:"https://www.maff.go.jp/j/supply/hozyo/nousan/260414_111-1.html",summary:"「全国の取組」（原則、供給調整機能を有する施設、補助事業で整備する施設、受益する生産者が都道府県をまたぐ取組）が対象。公募期間は今回の確認では分からなかった。",steps:null,documents:null,last_updated:"2026-10-04（確認日）"},
+{id:"maff_2026_nosanson",title:"令和8年度 農山漁村振興交付金（地域資源活用価値創出対策）地域活性化型、農泊推進型、農福連携型 追加（第2次）公募",organization:"農林水産省",target_roles:[],prefecture:"全国",category:"その他",application_period:null,official_url:"https://www.maff.go.jp/j/supply/hozyo/nousin/260615_301-1.html",summary:"全国単位の取組提案者向け事業を除く、地域活性化型・農泊推進型・農福連携型の交付金交付候補者の追加公募。公募期間は今回の確認では分からなかった。",steps:null,documents:null,last_updated:"2026-10-04（確認日）"},
+{id:"maff_2026_koyou",title:"「雇用就農資金」令和8年度第2回募集",organization:"農林水産省（実施主体：一般社団法人全国農業会議所）",target_roles:["法人農家（農業法人）"],prefecture:"全国",category:"新規就農・人財育成・教育",application_period:"2026-06-18 ～ 2026-07-22",official_url:"https://www.maff.go.jp/j/press/keiei/zinzai/260618.html",summary:"50歳未満の就農希望者を新たに雇用する農業法人等への資金。雇用就農者育成・独立支援タイプは年間最大60万円、最長4年間（公式ページの記載）。令和7年10月1日〜令和8年6月1日に雇用した場合が対象。",steps:null,documents:null,last_updated:"2026-10-04（確認日）"},
+{id:"maff_2026_hiryo4",title:"国内肥料資源活用総合支援事業（令和7年度補正予算）第4次募集",organization:"農林水産省",target_roles:[],prefecture:"全国",category:"環境保全・脱炭素・有機質資材",application_period:"2026-06-23 ～ 2026-07-13",official_url:"https://www.maff.go.jp/j/seisan/sien/sizai/s_hiryo/kokunaishigen/r7_recruit.html",summary:"令和8年度内に事業完了する事業実施計画書が対象の事業実施主体の募集。肥料の試作、栽培実証、機械導入等の推進支援と、施設整備の支援がある。",steps:null,documents:null,last_updated:"2026-10-04（確認日）"},
+{id:"maff_2026_kaju",title:"令和8年度 果樹農業生産力増強総合対策（果樹労働生産性向上等対策事業、果樹優良苗木・花粉安定確保対策事業）",organization:"農林水産省",target_roles:[],prefecture:"全国",category:"省力化・スマート農業機器導入",application_period:"2026-02-13 ～ 2026-03-04",official_url:"https://www.maff.go.jp/j/supply/hozyo/nousan/260213_180-1.html",summary:"果樹労働生産性向上等対策事業および果樹優良苗木・花粉安定確保対策事業の事業実施主体の公募。申請書類は原則、電子メールまたは郵送等で提出。",steps:null,documents:null,last_updated:"2026-10-04（確認日）"},
+{id:"maff_2026_keiei1",title:"令和8年度（第1回）経営局関係補助金等",organization:"農林水産省",target_roles:[],prefecture:"全国",category:"新規就農・人財育成・教育",application_period:"2026-02-09 ～ 2026-03-03",official_url:"https://www.maff.go.jp/j/supply/hozyo/keiei/260209_101-2.html",summary:"経営局関係の7事業の事業実施主体を公募。公示で確認できた事業には、優良経営体表彰等事業、新規就農者育成総合対策のうち農業教育高度化事業（全国事業）などがある。",steps:null,documents:null,last_updated:"2026-10-04（確認日）"}
+];
+const PREFS=["全国","北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"];
+const ROLES=["農家（個人）","法人農家（農業法人）","卸・販売店・商社","団体組織（JA・農協・協議会等）","農業資材・機器メーカー"];
+const CATS=["その他","資材高騰・コスト削減対策","省力化・スマート農業機器導入","施設園芸・後付け環境制御","環境保全・脱炭素・有機質資材","新規就農・人財育成・教育"];
+const STS=[["open","受付中"],["soon","予告"],["end","終了"],["unk","期間不明"]];
+
+let DATA=SAMPLE.slice(),custom=false,UPDATED="";
+async function loadData(){try{const r=await fetch("data.json",{cache:"no-store"});const j=await r.json();if(j&&Array.isArray(j.items)){DATA=j.items;UPDATED=j.updated||"";}}catch(e){}}
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const safeUrl=u=>/^https?:\/\//i.test(u||"")?u:null;
+const NA="情報なし";
+
+function status(p){
+  const m=String(p||"").match(/(\d{4}-\d{2}-\d{2})\s*[～~\-]\s*(\d{4}-\d{2}-\d{2})/);
+  if(!m)return "unk";
+  const t=new Date().toISOString().slice(0,10);
+  return t<m[1]?"soon":(t>m[2]?"end":"open");
+}
+const stLabel=k=>STS.find(s=>s[0]===k)[1];
+
+function init(){
+  $("pref").innerHTML='<option value="">すべて</option>'+PREFS.map(p=>`<option>${p}</option>`).join("");
+  $("cat").innerHTML='<option value="">すべて</option>'+CATS.map(c=>`<option>${c}</option>`).join("");
+  $("roles").innerHTML=ROLES.map(r=>`<label><input type="checkbox" value="${esc(r)}" class="rc"><span>${esc(r)}</span></label>`).join("");
+  $("stats").innerHTML=STS.map(s=>`<label><input type="checkbox" value="${s[0]}" class="sc"><span>${s[1]}</span></label>`).join("");
+  ["pref","cat","kw"].forEach(i=>$(i).addEventListener("input",render));
+  document.querySelectorAll(".rc,.sc").forEach(e=>e.addEventListener("change",render));
+  render();
+}
+
+function render(){
+  const pref=$("pref").value,cat=$("cat").value,kw=$("kw").value.trim().toLowerCase();
+  const rs=[...document.querySelectorAll(".rc:checked")].map(e=>e.value);
+  const ss=[...document.querySelectorAll(".sc:checked")].map(e=>e.value);
+  const hit=DATA.filter(d=>{
+    // 地域：全国の事業は、どの都道府県で絞っても残す
+    if(pref&&d.prefecture!==pref&&d.prefecture!=="全国")return false;
+    if(cat&&d.category!==cat&&!(CATS.includes(cat)&&String(d.category||"").includes(cat.slice(0,4))&&false))return false;
+    if(rs.length&&(d.target_roles||[]).length&&!d.target_roles.some(r=>rs.includes(r)))return false;
+    if(ss.length&&!ss.includes(status(d.application_period)))return false;
+    if(kw&&![d.title,d.organization,d.summary,d.category].join(" ").toLowerCase().includes(kw))return false;
+    return true;
+  });
+  $("count").textContent=hit.length+" 件";
+  $("list").innerHTML=hit.length?hit.map(card).join(""):'<p class="none">条件に合う情報がありません。条件を緩めてみてください。</p>';
+  $("notice").innerHTML=custom?"読み込んだデータを表示しています。内容は必ず公式ページでご確認ください。":"2026年10月4日時点で、農林水産省・環境省の公式ページから確認できた令和8年度の公募情報です。公式ページの期間表示で、10月4日時点の受付中と確認できたものはありません（多くは受付終了、または期間未確認）。申請の前に、必ず公式ページで最新の状況をご確認ください。"+(UPDATED?"（データ更新日："+esc(UPDATED)+"）":"")+"立場が「情報なし」の事業は、立場で絞っても表示されます。";
+}
+
+function card(d){
+  const k=status(d.application_period),u=safeUrl(d.official_url);
+  return `<div class="card">
+<div><span class="st ${k}">${stLabel(k)}</span></div>
+<h3>${esc(d.title||NA)}</h3>
+<div class="meta">主管：${esc(d.organization||NA)}／地域：${esc(d.prefecture||NA)}</div>
+<div>${d.pending?'<span class="tag" style="background:var(--warn);color:var(--warnTx)">自動収集・人の確認前</span>':""}${(d.target_roles||[]).map(r=>`<span class="tag">${esc(r)}</span>`).join("")||'<span class="none">対象：'+NA+'</span>'}</div>
+<div class="meta">募集期間：${esc(d.application_period||NA)}</div>
+<div class="btns">
+<button class="btn o" onclick="openD('${esc(d.id)}')">申請ガイド</button>
+${u?`<a class="btn" href="${esc(u)}" target="_blank" rel="noopener noreferrer">公式ページ（1次情報）</a>`:'<span class="none">1次情報URL：'+NA+'</span>'}
+</div></div>`;
+}
+
+function openD(id){
+  const d=DATA.find(x=>String(x.id)===id);if(!d)return;
+  const u=safeUrl(d.official_url);
+  const btn=u?`<a class="btn big" href="${esc(u)}" target="_blank" rel="noopener noreferrer">公式公募ページ（1次情報）を開く</a>`:'<p class="none">公式URL：詳細は公式ページをご確認ください</p>';
+  const k=status(d.application_period);
+  const steps=(d.steps&&d.steps.length)?d.steps.map((s,i)=>`<div class="step"><b>${i+1}</b><div>${esc(s)}</div></div>`).join(""):`<p class="none">${NA}（詳細は公式ページをご確認ください）</p>`;
+  const docs=(d.documents&&d.documents.length)?d.documents.map(x=>{const du=safeUrl(x.url);return du?`<div><a href="${esc(du)}" target="_blank" rel="noopener noreferrer">${esc(x.name||du)}</a></div>`:""}).join(""):`<p class="none">${NA}（詳細は公式ページをご確認ください）</p>`;
+  $("md").innerHTML=`<button class="btn o x" onclick="closeD()">閉じる</button>
+<span class="st ${k}">${stLabel(k)}</span>
+<h2>${esc(d.title||NA)}</h2>
+<div class="meta">主管：${esc(d.organization||NA)}／地域：${esc(d.prefecture||NA)}／カテゴリー：${esc(d.category||NA)}</div>
+${d.dummy?'<div class="notice" style="margin-top:8px">これは表示確認用のダミーです。実在の補助金ではありません。</div>':""}
+${btn}
+<h4>概要と対象要件</h4>
+<p>${d.summary?esc(d.summary):NA+"（詳細は公式ページをご確認ください）"}</p>
+<div>${(d.target_roles||[]).map(r=>`<span class="tag">${esc(r)}</span>`).join("")}</div>
+<div class="meta">募集期間：${esc(d.application_period||NA)}</div>
+<h4>やるべきこと・手順</h4>${steps}
+<h4>必要書類・様式</h4>${docs}
+<h4>公式ページ</h4>${btn}
+<div class="meta">最終更新：${esc(d.last_updated||NA)}</div>`;
+  $("ov").classList.add("on");$("ov").scrollTop=0;
+}
+function closeD(){$("ov").classList.remove("on")}
+$("ov").addEventListener("click",e=>{if(e.target.id==="ov")closeD()});
+
+loadData().then(init);
+</script>
+</body>
+</html>
