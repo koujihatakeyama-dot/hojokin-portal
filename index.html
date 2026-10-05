@@ -196,11 +196,13 @@ function openD(id){
 <div class="meta">主管：${esc(d.organization||NA)}／地域：${esc(d.prefecture||NA)}／カテゴリー：${esc(d.category||NA)}</div>
 ${d.dummy?'<div class="notice" style="margin-top:8px">これは表示確認用のダミーです。実在の補助金ではありません。</div>':""}
 ${btn}
-<h4>概要と対象要件</h4>
-${d.who?`<p><b>対象：</b>${esc(d.who)}</p>`:""}
+<h4>事業概要</h4>
 ${d.purpose?`<p><b>目的：</b>${esc(d.purpose)}</p>`:""}
-<p>${d.summary?esc(d.summary):NA+"（詳細は公式ページをご確認ください）"}</p>
+<p>${(d.overview||d.summary)?esc(d.overview||d.summary):NA+"（詳細は公式ページをご確認ください）"}</p>
+<h4>対象</h4>
+${d.who?`<p>${esc(d.who)}</p>`:""}
 <div>${(d.target_roles||[]).map(r=>`<span class="tag">${esc(r)}</span>`).join("")}</div>
+${(!d.who&&!(d.target_roles||[]).length)?`<p class="none">${NA}（詳細は公式ページをご確認ください）</p>`:""}
 <div class="meta">募集期間：${esc(fmtPeriod(d.application_period))}</div>
 ${d.how?`<h4>応募方法</h4><p>${esc(d.how)}</p>`:""}
 <h4>公式ページ</h4>${btn}
