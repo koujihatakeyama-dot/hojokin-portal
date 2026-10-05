@@ -8,6 +8,8 @@ import json, re, datetime, html, urllib.request
 BASE = "https://www.maff.go.jp"
 LIST_URL = BASE + "/j/supply/hozyo/index.html"
 HEADERS = {"User-Agent": "Mozilla/5.0 (subsidy-portal daily collector)"}
+JST = datetime.timezone(datetime.timedelta(hours=9))
+NEW_RUNS = 6  # 新しく追加したカードに「NEW」を出す更新回数（6回目の更新後に消える）
 
 
 def get(url):
@@ -42,9 +44,16 @@ def main():
     except Exception:
         data = {"updated": "", "items": []}
     known = {i.get("official_url") for i in data["items"]}
-    today = datetime.date.today().isoformat()
+    now = datetime.datetime.now(JST)
+    today = now.date().isoformat()
 
     page = get(LIST_URL)
+    # 前回までに追加したカードの「NEW 残り回数」を1つ減らす（0になったら NEW が消える）
+    for i in data["items"]:
+        if i.get("new_left", 0) > 0:
+            i["new_left"] -= 1
+            if i["new_left"] <= 0:
+                i.pop("new_left", None)
     links = re.findall(r'<a[^>]+href="([^"]+)"[^>]*>(.*?)</a>', page, re.S)
     added = 0
     for href, label in links:
@@ -65,10 +74,12 @@ def main():
             "application_period": period, "official_url": url,
             "summary": None, "steps": None, "documents": None,
             "last_updated": today + "（自動収集）", "pending": True,
+            "added_at": now.strftime("%Y-%m-%dT%H:%M"), "new_left": NEW_RUNS,
         })
         known.add(url)
         added += 1
     data["updated"] = today
+    data["updated_at"] = now.strftime("%Y-%m-%d %H:%M")
     with open("data.json", "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=1)
     print("added:", added)
