@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-04",
+ "updated": "2026-10-05",
  "items": [
   {
    "id": "env_2026_denka",
@@ -148,6 +148,81 @@
    "steps": null,
    "documents": null,
    "last_updated": "2026-10-04（確認日）"
+  },
+  {
+   "id": "auto_nousan260722_1401html",
+   "title": "スマート農業・農業支援サービス導入総合サポート緊急対策/スマート技術体系への包括的転換加速化総合対策事業のうちスマート技術体系転換加速化支援（広域型）の追加公募について",
+   "organization": "農林水産省",
+   "target_roles": [],
+   "prefecture": "全国",
+   "category": "その他",
+   "application_period": null,
+   "official_url": "https://www.maff.go.jp/j/supply/hozyo/nousan/260722_140-1.html",
+   "summary": null,
+   "steps": null,
+   "documents": null,
+   "last_updated": "2026-10-05（自動収集）",
+   "pending": true
+  },
+  {
+   "id": "auto_kanbo260716_0201html",
+   "title": "令和8年度持続可能な食品等流通対策事業のうち物流生産性・食品アクセス向上推進事業の公募について",
+   "organization": "農林水産省",
+   "target_roles": [],
+   "prefecture": "全国",
+   "category": "その他",
+   "application_period": null,
+   "official_url": "https://www.maff.go.jp/j/supply/hozyo/kanbo/260716_020-1.html",
+   "summary": null,
+   "steps": null,
+   "documents": null,
+   "last_updated": "2026-10-05（自動収集）",
+   "pending": true
+  },
+  {
+   "id": "auto_nousanresult_260722_1201html",
+   "title": "結果はこちらから",
+   "organization": "農林水産省",
+   "target_roles": [],
+   "prefecture": "全国",
+   "category": "その他",
+   "application_period": null,
+   "official_url": "https://www.maff.go.jp/j/supply/hozyo/nousan/result_260722_120-1.html",
+   "summary": null,
+   "steps": null,
+   "documents": null,
+   "last_updated": "2026-10-05（自動収集）",
+   "pending": true
+  },
+  {
+   "id": "auto_nousanresult_260716_1201html",
+   "title": "結果はこちらから",
+   "organization": "農林水産省",
+   "target_roles": [],
+   "prefecture": "全国",
+   "category": "その他",
+   "application_period": null,
+   "official_url": "https://www.maff.go.jp/j/supply/hozyo/nousan/result_260716_120-1.html",
+   "summary": null,
+   "steps": null,
+   "documents": null,
+   "last_updated": "2026-10-05（自動収集）",
+   "pending": true
+  },
+  {
+   "id": "auto_nousanresult_250730_1611html",
+   "title": "結果はこちらから",
+   "organization": "農林水産省",
+   "target_roles": [],
+   "prefecture": "全国",
+   "category": "その他",
+   "application_period": null,
+   "official_url": "https://www.maff.go.jp/j/supply/hozyo/nousan/result_250730_161-1.html",
+   "summary": null,
+   "steps": null,
+   "documents": null,
+   "last_updated": "2026-10-05（自動収集）",
+   "pending": true
   }
  ]
 }
