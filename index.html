@@ -95,8 +95,19 @@ const ROLES=["農家（個人）","法人農家（農業法人）","卸・販売
 const CATS=["その他","資材高騰・コスト削減対策","省力化・スマート農業機器導入","施設園芸・後付け環境制御","環境保全・脱炭素・有機質資材","新規就農・人財育成・教育"];
 const STS=[["open","受付中"],["soon","予告"],["end","終了"],["unk","期間不明"]];
 
+// 補助金の題名ではない、リンクの文字（「結果はこちらから」など）を拾ってしまった項目を表示しない。
+// 毎日の自動更新で同じものが入ってきても、ここで取り除かれる。
+const JUNK_TITLE=/^(結果|詳細|一覧|こちら|ここ|ＰＤＦ|PDF|様式|要領|公募要領|公募結果|採択結果|応募結果|結果はこちら|詳しくはこちら)/;
+function isJunk(d){
+  const t=String((d&&d.title)||"").replace(/[\s　]/g,"");
+  if(!t)return true;
+  if(JUNK_TITLE.test(t))return true;
+  if(d.pending&&t.length<8)return true;
+  return false;
+}
+
 let DATA=SAMPLE.slice(),custom=false,UPDATED="";
-async function loadData(){try{const r=await fetch("data.json",{cache:"no-store"});const j=await r.json();if(j&&Array.isArray(j.items)){DATA=j.items;UPDATED=j.updated||"";}}catch(e){}}
+async function loadData(){try{const r=await fetch("data.json",{cache:"no-store"});const j=await r.json();if(j&&Array.isArray(j.items)){DATA=j.items;UPDATED=j.updated||"";}}catch(e){}DATA=DATA.filter(d=>!isJunk(d));}
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const safeUrl=u=>/^https?:\/\//i.test(u||"")?u:null;
