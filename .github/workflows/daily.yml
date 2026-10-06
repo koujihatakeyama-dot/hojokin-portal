@@ -1,10 +1,18 @@
 name: daily-update
+
 on:
   schedule:
-    - cron: "0 21 * * *"
-  workflow_dispatch:
+    - cron: "0 22 * * *"   # 毎日 朝7:00（日本時間）
+    - cron: "0 10 * * *"   # 毎日 夕方19:00（日本時間）
+  workflow_dispatch:        # 手動でも実行できるようにする
+
 permissions:
   contents: write
+
+concurrency:
+  group: daily-update
+  cancel-in-progress: false
+
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -18,4 +26,6 @@ jobs:
           git config user.name "bot"
           git config user.email "bot@users.noreply.github.com"
           git add data.json
-          git diff --cached --quiet || (git commit -m "daily update" && git push)
+          git diff --cached --quiet || git commit -m "daily update"
+          git pull --rebase
+          git push
