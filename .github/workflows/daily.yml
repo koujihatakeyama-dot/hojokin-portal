@@ -39,5 +39,6 @@ jobs:
             echo "変更なし"
           else
             git commit -m "データ更新 $(TZ=Asia/Tokyo date '+%Y-%m-%d %H:%M')"
+            git pull --rebase -X theirs origin main
             git push
           fi
