@@ -235,7 +235,7 @@ ${who}
 <div class="info"><b>募集期間</b>${esc(fmtPeriod(d.application_period))}</div>
 ${addedText(d)?`<div class="meta">${esc(addedText(d))}</div>`:""}
 ${F(d,'purpose')?`<div class="info"><b>目的</b>${esc(F(d,'purpose'))}${fromAI(d,'purpose')?AIB:''}</div>`:""}
-${MX(d)?`<div class="info"><b>補助上限額</b>${esc(MX(d))}</div>`:""}
+${MX(d)?`<div class="info"><b>補助上限額</b>${esc(MX(d))}</div>`:(d.source==="jgrants"?`<div class="info"><b>補助上限額</b><span class="none">登録なし（金額は公式ページの本文でご確認ください）</span></div>`:"")}
 ${d.rate_text?`<div class="info"><b>補助率</b>${esc(d.rate_text)}</div>`:""}
 ${F(d,'how')?`<div class="info"><b>応募方法</b>${esc(F(d,'how'))}${fromAI(d,'how')?AIB:''}</div>`:""}
 ${(AI(d).amount&&!MX(d)&&!d.rate_text)?`<div class="info"><b>補助額・割合</b>${esc(AI(d).amount)}${AIB}</div>`:""}
@@ -265,6 +265,7 @@ ${F(d,'purpose')?`<p><b>目的：</b>${esc(F(d,'purpose'))}${fromAI(d,'purpose')
 ${F(d,'who')?`<p>${esc(F(d,'who'))}${fromAI(d,'who')?AIB:''}</p>`:""}
 ${(!F(d,'who'))?`<p class="none">${NA}（詳細は公式ページをご確認ください）</p>`:""}
 <div class="meta">募集期間：${esc(fmtPeriod(d.application_period))}${leftText(d.application_period)?"（"+esc(leftText(d.application_period))+"）":""}</div>
+${(!MX(d)&&d.source==="jgrants")?`<p class="none">補助上限額：Jグランツに登録がありません（金額は公式ページの本文でご確認ください）</p>`:""}
 ${(MX(d)||d.rate_text)?`<h4>補助の内容（公式の記載）</h4><p>${MX(d)?"補助上限額："+esc(MX(d)):""}${MX(d)&&d.rate_text?"　／　":""}${d.rate_text?"補助率："+esc(d.rate_text):""}</p>`:""}
 ${F(d,'how')?`<h4>応募方法</h4><p>${esc(F(d,'how'))}${fromAI(d,'how')?AIB:''}</p>`:""}
 ${(AI(d).amount&&!MX(d)&&!d.rate_text)?`<h4>補助額・割合</h4><p>${esc(AI(d).amount)}${AIB}</p>`:""}
