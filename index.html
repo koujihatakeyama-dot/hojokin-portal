@@ -163,8 +163,25 @@ const F=(d,k)=>d[k]||AI(d)[k]||null;
 const fromAI=(d,k)=>!d[k]&&!!AI(d)[k];
 const AIB='<span class="aib">AI要約</span>';
 // どこの機関の情報か：省庁名の印（色分け）。Jグランツ経由のものは出典も添える
-function orgName(d){return String(d.organization||"").split("（")[0].trim()}
-function orgBadge(d){const n=orgName(d);if(!n)return"";const c=/農林水産/.test(n)?"maff":/環境/.test(n)?"env":/経済産業|中小企業庁/.test(n)?"meti":(d.source==="jgrants"?"jg":"");return `<span class="orgb ${c}">${esc(n)}</span>`+(d.source==="jgrants"?'<span class="src">出典：Jグランツ（デジタル庁）</span>':"")}
+const MX=d=>(d.max_text&&d.max_text!=="0円")?d.max_text:null;
+function orgText(d){
+  const o=String(d.organization||"").trim();if(!o)return "";
+  if(d.source==="jgrants"){ // 公式データの「機関名」欄に事業名が入っているものは、主管として出さない
+    const cl=x=>String(x).replace(/【[^】]*】/g,"").replace(/令和\s*[0-9０-９]+\s*年度/g,"").replace(/\s/g,"");
+    const a=cl(o),b=cl(d.title||"");
+    if(a&&b&&(b.includes(a.slice(0,6))||a.includes(b.slice(0,6))))return "";
+  }
+  return o;
+}
+function orgName(d){return orgText(d).split("（")[0].trim()}
+function simplifyWho(w){
+  const m=String(w||"").match(/業種：([^／]*)/);if(!m)return w;
+  const list=m[1].split("/").map(x=>x.trim()).filter(Boolean);
+  if(list.length<8)return w;
+  const rest=String(w).replace(/業種：[^／]*／?\s*/,"").trim();
+  return (list.includes("農業")?"業種の制限は広く、農業も対象に含まれる":"業種の制限は広い")+(rest?"／"+rest:"");
+}
+function orgBadge(d){const n=orgName(d);if(!n)return d.source==="jgrants"?'<span class="src">出典：Jグランツ（デジタル庁）</span>':"";const c=/農林水産/.test(n)?"maff":/環境/.test(n)?"env":/経済産業|中小企業庁/.test(n)?"meti":(d.source==="jgrants"?"jg":"");return `<span class="orgb ${c}">${esc(n)}</span>`+(d.source==="jgrants"?'<span class="src">出典：Jグランツ（デジタル庁）</span>':"")}
 // 掲載日時（日本時間）。農水省の公告日をもとにした項目（時刻が 00:00）は、時刻を出さず日付だけにする
 function addedText(d){
   const t=Date.parse(d.added_at||"");if(!t)return "";
@@ -206,22 +223,22 @@ function card(d){
   const k=status(d.application_period),u=safeUrl(d.official_url),n=daysLeft(d.application_period);
   const lt=leftText(d.application_period),left=(k!=="unk"&&lt)?`<span class="left">${esc(lt)}</span>`:"";
   const roles="";
-  const wS=AI(d).who_short||F(d,'who');
+  const wS=AI(d).who_short||simplifyWho(F(d,'who'));
   const who=wS?`<div class="info"><b>対象</b>${esc(wS)}${(!d.who&&(AI(d).who_short||AI(d).who))?AIB:''}</div>`:'<div class="info"><b>対象</b><span class="none">公式ページでご確認ください（要約を準備中）</span></div>';
   return `<div class="card">
 <div class="orgrow">${orgBadge(d)}</div>
 <div>${isNew(d)?'<span class="newb">NEW</span>':""}<span class="st ${k}">${stLabel(k)}</span>${left}</div>
 <h3>${esc(d.title||NA)}</h3>
-<div class="meta">主管：${esc(d.organization||NA)}／地域：${esc(d.prefecture||NA)}</div>
+<div class="meta">主管：${esc(orgText(d)||'公式ページでご確認ください')}／地域：${esc(d.prefecture||NA)}</div>
 <div>${d.pending?'<span class="tag" style="background:var(--warn);color:var(--warnTx)">自動取得（詳細は公式ページで）</span>':""}${roles}</div>
 ${who}
 <div class="info"><b>募集期間</b>${esc(fmtPeriod(d.application_period))}</div>
 ${addedText(d)?`<div class="meta">${esc(addedText(d))}</div>`:""}
 ${F(d,'purpose')?`<div class="info"><b>目的</b>${esc(F(d,'purpose'))}${fromAI(d,'purpose')?AIB:''}</div>`:""}
-${d.max_text?`<div class="info"><b>補助上限額</b>${esc(d.max_text)}</div>`:""}
+${MX(d)?`<div class="info"><b>補助上限額</b>${esc(MX(d))}</div>`:""}
 ${d.rate_text?`<div class="info"><b>補助率</b>${esc(d.rate_text)}</div>`:""}
 ${F(d,'how')?`<div class="info"><b>応募方法</b>${esc(F(d,'how'))}${fromAI(d,'how')?AIB:''}</div>`:""}
-${(AI(d).amount&&!d.max_text&&!d.rate_text)?`<div class="info"><b>補助額・割合</b>${esc(AI(d).amount)}${AIB}</div>`:""}
+${(AI(d).amount&&!MX(d)&&!d.rate_text)?`<div class="info"><b>補助額・割合</b>${esc(AI(d).amount)}${AIB}</div>`:""}
 ${(AI(d).checks&&AI(d).checks.length)?`<div class="chk"><b>自社に当てはまるか、確認したい点</b>${AI(d).checks.map(c=>`<div>□ ${esc(c)}</div>`).join("")}</div>`:""}
 ${(AI(d).who||AI(d).purpose||AI(d).how||AI(d).amount||(AI(d).checks||[]).length)&&!(d.who&&d.purpose&&d.how)?'<div class="aiw">「AI要約」は公式ページの文章をやさしく言い直したものです。数字・日付は公式の文章と機械で照合していますが、申請の前に必ず公式ページで確認してください。</div>':""}
 <div class="btns">
@@ -238,7 +255,7 @@ function openD(id){
   $("md").innerHTML=`<button class="btn o x" onclick="closeD()">閉じる</button>
 ${orgBadge(d)}<span class="st ${k}">${stLabel(k)}</span>
 <h2>${esc(d.title||NA)}</h2>
-<div class="meta">主管：${esc(d.organization||NA)}／地域：${esc(d.prefecture||NA)}／カテゴリー：${esc(d.category||NA)}</div>
+<div class="meta">主管：${esc(orgText(d)||'公式ページでご確認ください')}／地域：${esc(d.prefecture||NA)}／カテゴリー：${esc(d.category||NA)}</div>
 ${d.dummy?'<div class="notice" style="margin-top:8px">これは表示確認用のダミーです。実在の補助金ではありません。</div>':""}
 ${btn}
 <h4>事業概要</h4>
@@ -248,9 +265,9 @@ ${F(d,'purpose')?`<p><b>目的：</b>${esc(F(d,'purpose'))}${fromAI(d,'purpose')
 ${F(d,'who')?`<p>${esc(F(d,'who'))}${fromAI(d,'who')?AIB:''}</p>`:""}
 ${(!F(d,'who'))?`<p class="none">${NA}（詳細は公式ページをご確認ください）</p>`:""}
 <div class="meta">募集期間：${esc(fmtPeriod(d.application_period))}${leftText(d.application_period)?"（"+esc(leftText(d.application_period))+"）":""}</div>
-${(d.max_text||d.rate_text)?`<h4>補助の内容（公式の記載）</h4><p>${d.max_text?"補助上限額："+esc(d.max_text):""}${d.max_text&&d.rate_text?"　／　":""}${d.rate_text?"補助率："+esc(d.rate_text):""}</p>`:""}
+${(MX(d)||d.rate_text)?`<h4>補助の内容（公式の記載）</h4><p>${MX(d)?"補助上限額："+esc(MX(d)):""}${MX(d)&&d.rate_text?"　／　":""}${d.rate_text?"補助率："+esc(d.rate_text):""}</p>`:""}
 ${F(d,'how')?`<h4>応募方法</h4><p>${esc(F(d,'how'))}${fromAI(d,'how')?AIB:''}</p>`:""}
-${(AI(d).amount&&!d.max_text&&!d.rate_text)?`<h4>補助額・割合</h4><p>${esc(AI(d).amount)}${AIB}</p>`:""}
+${(AI(d).amount&&!MX(d)&&!d.rate_text)?`<h4>補助額・割合</h4><p>${esc(AI(d).amount)}${AIB}</p>`:""}
 ${(AI(d).checks&&AI(d).checks.length)?`<h4>自社に当てはまるか、確認したい点</h4><div class="chk">${AI(d).checks.map(c=>`<div>□ ${esc(c)}</div>`).join("")}</div>`:""}
 ${(AI(d).who||AI(d).purpose||AI(d).how||AI(d).amount||(AI(d).checks||[]).length)?'<p class="aiw">「AI要約」は公式ページの文章をやさしく言い直したものです。数字・日付は公式の文章と機械で照合していますが、申請の前に、必ず上の「公式公募ページ」で内容を確認してください。</p>':""}
 <h4>公式ページ</h4>${btn}

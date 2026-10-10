@@ -157,7 +157,7 @@ def iso_date(v):
 
 def yen(v):
     try:
-        return "{:,}円".format(int(v))
+        return "{:,}円".format(int(v)) if int(v) > 0 else None
     except Exception:
         return None
 
@@ -193,7 +193,7 @@ def collect_jgrants(known_urls, known_ids):
         title = (d.get("title") or r.get("title") or "").strip()
         if not url or not title or url in known_urls:
             continue
-        blob = " ".join(str(d.get(k) or "") for k in ("title", "name", "subsidy_catch_phrase", "use_purpose", "industry"))
+        blob = " ".join(str(d.get(k) or "") for k in ("title", "name", "subsidy_catch_phrase"))  # 業種欄は全業種が並ぶため判定に使わない
         if not JG_AGRI.search(blob):  # 農業と関係の薄いものは載せない
             continue
         start, end = iso_date(d.get("acceptance_start_datetime")), iso_date(d.get("acceptance_end_datetime"))
@@ -237,6 +237,8 @@ def main():
     data = load()
     # 題名ではないリンク文字（「結果はこちらから」など）を拾った項目は取り除く
     data["items"] = [i for i in data["items"] if not JUNK_TITLE.match(str(i.get("title") or "").replace(" ", ""))]
+    # Jグランツ由来で、件名・概要に農業の語が無いもの（全業種対象の汎用補助金など）は取り除く
+    data["items"] = [i for i in data["items"] if not (i.get("source") == "jgrants" and not JG_AGRI.search(str(i.get("title") or "") + str(i.get("purpose") or "")))]
     by_url = {i.get("official_url"): i for i in data["items"] if i.get("official_url")}
     ids = {i.get("id") for i in data["items"]}
     added, failed = 0, False
