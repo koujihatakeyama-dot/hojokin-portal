@@ -1,31 +1,43 @@
-name: daily-update
+name: 公募情報の自動更新
 
 on:
   schedule:
-    - cron: "0 22 * * *"   # 毎日 朝7:00（日本時間）
-    - cron: "0 10 * * *"   # 毎日 夕方19:00（日本時間）
-  workflow_dispatch:        # 手動でも実行できるようにする
+    - cron: "0 22 * * *"   # 日本時間 毎朝7:00（UTC 22:00）
+    - cron: "0 10 * * *"   # 日本時間 毎夕19:00（UTC 10:00）
+  workflow_dispatch:        # 手動実行ボタン
 
 permissions:
   contents: write
 
 concurrency:
-  group: daily-update
+  group: collect
   cancel-in-progress: false
 
 jobs:
-  run:
+  collect:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python collector.py
-      - run: |
-          git config user.name "bot"
-          git config user.email "bot@users.noreply.github.com"
+      - name: 公式の情報源から集めて data.json を更新
+        run: python collector.py
+      - name: 公式の文章をAIでやさしく言い直し、機械で照合（失敗しても更新は止めない）
+        if: always()
+        continue-on-error: true
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python summarize.py
+      - name: 変更があれば保存（サイトは保存をきっかけに自動で更新されます）
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data.json
-          git diff --cached --quiet || git commit -m "daily update"
-          git pull --rebase
-          git push
+          if git diff --cached --quiet; then
+            echo "変更なし"
+          else
+            git commit -m "データ更新 $(TZ=Asia/Tokyo date '+%Y-%m-%d %H:%M')"
+            git push
+          fi
