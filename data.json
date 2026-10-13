@@ -1,6 +1,6 @@
 {
  "updated": "2026-10-13",
- "updated_at": "2026-10-13 07:04",
+ "updated_at": "2026-10-13 19:10",
  "items": [
   {
    "id": "maff_2026_tsuyoi_3",
@@ -3099,6 +3099,23 @@
    "source": "jgrants",
    "added_at": "2026-10-10T13:53:04+09:00",
    "last_updated": "2026-10-10（Jグランツから自動取得）"
+  },
+  {
+   "id": "auto_nousan2601013_1611html",
+   "title": "令和8年度米粉需要創出・利用促進対策事業(令和7年度補正予算(第1号))のうち米粉製品製造能力強化等支援対策事業に係る3次公募について",
+   "organization": "農林水産省",
+   "target_roles": [],
+   "prefecture": "全国",
+   "category": "その他",
+   "application_period": "2026-10-13 ～ 2026-10-30",
+   "official_url": "https://www.maff.go.jp/j/supply/hozyo/nousan/2601013_161-1.html",
+   "summary": null,
+   "steps": null,
+   "documents": null,
+   "pending": true,
+   "source": "maff",
+   "added_at": "2026-10-13T19:10:12+09:00",
+   "last_updated": "2026-10-13（自動取得）"
   }
  ]
 }
