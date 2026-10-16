@@ -1,6 +1,6 @@
 {
  "updated": "2026-10-16",
- "updated_at": "2026-10-16 07:15",
+ "updated_at": "2026-10-16 19:21",
  "items": [
   {
    "id": "maff_2026_tsuyoi_3",
@@ -3116,6 +3116,48 @@
    "source": "maff",
    "added_at": "2026-10-13T19:10:12+09:00",
    "last_updated": "2026-10-13（自動取得）"
+  },
+  {
+   "id": "jg_a0WJ200000CDVn9MAH",
+   "title": "【農産園芸課向け】都城市農業資材等価格高騰緊急支援事業費補助金（令和８年度）",
+   "organization": "都城市農業資材等価格高騰緊急支援事業費補助金",
+   "target_roles": [],
+   "prefecture": "宮崎県",
+   "category": "資材高騰・コスト削減対策",
+   "application_period": "2026-10-16 ～ 2027-01-29",
+   "official_url": "https://www.jgrants-portal.go.jp/subsidy/a0WJ200000CDVn9MAH",
+   "who": "業種：農業、林業 ／ 従業員数：従業員数の制約なし",
+   "purpose": "都城市農業資材等価格高騰緊急支援事業費補助金",
+   "max_text": "1,000,000円",
+   "rate_text": "補助対象経費に5.3％を乗じて得た額の２分の１以内（1,000円未満切り捨て）",
+   "summary": null,
+   "steps": null,
+   "documents": null,
+   "pending": true,
+   "source": "jgrants",
+   "added_at": "2026-10-16T19:21:11+09:00",
+   "last_updated": "2026-10-16（Jグランツから自動取得）"
+  },
+  {
+   "id": "jg_a0WJ200000CDVn4MAH",
+   "title": "【畜産事業者向け】都城市農業資材等価格高騰緊急支援事業費補助金（令和８年度）",
+   "organization": "都城市農業資材等価格高騰緊急支援事業費補助金",
+   "target_roles": [],
+   "prefecture": "宮崎県",
+   "category": "資材高騰・コスト削減対策",
+   "application_period": "2026-10-16 ～ 2027-01-29",
+   "official_url": "https://www.jgrants-portal.go.jp/subsidy/a0WJ200000CDVn4MAH",
+   "who": "業種：農業、林業 ／ 従業員数：従業員数の制約なし",
+   "purpose": "都城市農業資材等価格高騰緊急支援事業費補助金",
+   "max_text": "1,000,000円",
+   "rate_text": "補助対象経費に5.3％を乗じて得た額の２分の１以内（1,000円未満切り捨て）",
+   "summary": null,
+   "steps": null,
+   "documents": null,
+   "pending": true,
+   "source": "jgrants",
+   "added_at": "2026-10-16T19:21:11+09:00",
+   "last_updated": "2026-10-16（Jグランツから自動取得）"
   }
  ]
 }
