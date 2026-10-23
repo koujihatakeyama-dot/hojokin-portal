@@ -1,6 +1,6 @@
 {
  "updated": "2026-10-23",
- "updated_at": "2026-10-23 07:17",
+ "updated_at": "2026-10-23 19:21",
  "items": [
   {
    "id": "maff_2026_tsuyoi_3",
@@ -3158,6 +3158,23 @@
    "source": "jgrants",
    "added_at": "2026-10-16T19:21:11+09:00",
    "last_updated": "2026-10-16（Jグランツから自動取得）"
+  },
+  {
+   "id": "auto_nousan261023_160_1html",
+   "title": "令和7年度新たな生産・流通モデルづくり事業の第5次公募の実施について",
+   "organization": "農林水産省",
+   "target_roles": [],
+   "prefecture": "全国",
+   "category": "その他",
+   "application_period": "2026-10-23 ～ 2026-11-06",
+   "official_url": "https://www.maff.go.jp/j/supply/hozyo/nousan/261023_160_1.html",
+   "summary": null,
+   "steps": null,
+   "documents": null,
+   "pending": true,
+   "source": "maff",
+   "added_at": "2026-10-23T19:21:56+09:00",
+   "last_updated": "2026-10-23（自動取得）"
   }
  ]
 }
