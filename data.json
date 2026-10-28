@@ -1,6 +1,6 @@
 {
  "updated": "2026-10-28",
- "updated_at": "2026-10-28 07:24",
+ "updated_at": "2026-10-28 19:33",
  "items": [
   {
    "id": "maff_2026_tsuyoi_3",
@@ -3175,6 +3175,23 @@
    "source": "maff",
    "added_at": "2026-10-23T19:21:56+09:00",
    "last_updated": "2026-10-23（自動取得）"
+  },
+  {
+   "id": "auto_yusyutu_kokusai261028_1011html",
+   "title": "令和8年度（令和7年度補正）野菜種子安定供給緊急対策事業に係る第4次公募について",
+   "organization": "農林水産省",
+   "target_roles": [],
+   "prefecture": "全国",
+   "category": "その他",
+   "application_period": "2026-10-28 ～ 2026-11-11",
+   "official_url": "https://www.maff.go.jp/j/supply/hozyo/yusyutu_kokusai/261028_101-1.html",
+   "summary": null,
+   "steps": null,
+   "documents": null,
+   "pending": true,
+   "source": "maff",
+   "added_at": "2026-10-28T19:33:09+09:00",
+   "last_updated": "2026-10-28（自動取得）"
   }
  ]
 }
