@@ -1,6 +1,6 @@
 {
  "updated": "2026-11-25",
- "updated_at": "2026-11-25 05:27",
+ "updated_at": "2026-11-25 13:41",
  "items": [
   {
    "id": "maff_2026_tsuyoi_3",
@@ -3192,6 +3192,40 @@
    "source": "maff",
    "added_at": "2026-10-28T19:33:09+09:00",
    "last_updated": "2026-10-28（自動取得）"
+  },
+  {
+   "id": "auto_nousin261125_1211html",
+   "title": "令和8年度官民連携新技術研究開発事業の公募について（第1回）",
+   "organization": "農林水産省",
+   "target_roles": [],
+   "prefecture": "全国",
+   "category": "その他",
+   "application_period": "2026-11-25 ～ 2026-12-16",
+   "official_url": "https://www.maff.go.jp/j/supply/hozyo/nousin/261125_121-1.html",
+   "summary": null,
+   "steps": null,
+   "documents": null,
+   "pending": true,
+   "source": "maff",
+   "added_at": "2026-11-25T13:41:12+09:00",
+   "last_updated": "2026-11-25（自動取得）"
+  },
+  {
+   "id": "auto_nousan261125_1301html",
+   "title": "令和8年度麦・大豆利用拡大事業（令和7年度補正予算）に係る公募について",
+   "organization": "農林水産省",
+   "target_roles": [],
+   "prefecture": "全国",
+   "category": "その他",
+   "application_period": "2026-11-25 ～ 2026-12-18",
+   "official_url": "https://www.maff.go.jp/j/supply/hozyo/nousan/261125_130-1.html",
+   "summary": null,
+   "steps": null,
+   "documents": null,
+   "pending": true,
+   "source": "maff",
+   "added_at": "2026-11-25T13:41:12+09:00",
+   "last_updated": "2026-11-25（自動取得）"
   }
  ]
 }
